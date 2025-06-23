@@ -1,0 +1,34 @@
+{
+    "listas": [
+        {
+            "id": 1,
+            "nome": "Geral"
+        }
+    ],
+    "tarefas": [
+        {
+            "id": 1,
+            "titulo": "Teste 2",
+            "lista_id": 1,
+            "concluida": true,
+            "data_termino": "2025-12-12",
+            "prioridade": "alta",
+            "tags": [
+                "estudos"
+            ],
+            "notas": "",
+            "repeticao": "semanal"
+        },
+        {
+            "id": 3632587198,
+            "titulo": "Teste teste",
+            "lista_id": 1,
+            "concluida": false,
+            "data_termino": null,
+            "prioridade": "nenhuma",
+            "tags": [],
+            "notas": "",
+            "repeticao": "nunca"
+        }
+    ]
+}
