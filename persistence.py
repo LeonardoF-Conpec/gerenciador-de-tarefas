@@ -3,7 +3,7 @@ import os
 from typing import List, Dict, Any, Tuple
 
 # Importa as classes do seu módulo de modelos
-from models import Tarefa, ListaDeTarefas, gerar_id_unico
+from models import Tarefa, ListaDeTarefas
 
 # Define o nome do arquivo de dados como uma constante.
 # Facilita a alteração do nome do arquivo em um só lugar, se necessário.
@@ -52,7 +52,7 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
     if not os.path.exists(DATA_FILE):
         print("Arquivo de dados não encontrado. Criando uma lista padrão 'Geral'.")
         # Cria uma lista inicial "Geral" para que o programa sempre tenha pelo menos uma lista.
-        lista_geral = ListaDeTarefas(id=gerar_id_unico(), nome="Geral")
+        lista_geral = ListaDeTarefas(id=1, nome="Geral")
         # Retorna a lista padrão e uma lista de tarefas vazia
         return [lista_geral], []
 
@@ -62,7 +62,7 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
             # Verifica se o arquivo está vazio para evitar erros de decodificação
             if os.path.getsize(DATA_FILE) == 0:
                 print("Arquivo de dados vazio. Criando uma lista padrão 'Geral'.")
-                lista_geral = ListaDeTarefas(id=gerar_id_unico(), nome="Geral")
+                lista_geral = ListaDeTarefas(id=1, nome="Geral")
                 return [lista_geral], []
 
             dados = json.load(f)
@@ -79,9 +79,9 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
     except (json.JSONDecodeError, KeyError) as e:
         print(f"Erro ao ler ou decodificar o arquivo JSON: {e}. Iniciando com dados padrão.")
         # Se o arquivo estiver corrompido ou mal formatado, começa com uma lista padrão.
-        lista_geral = ListaDeTarefas(id=gerar_id_unico(), nome="Geral")
+        lista_geral = ListaDeTarefas(id=1, nome="Geral")
         return [lista_geral], []
     except Exception as e:
         print(f"Ocorreu um erro inesperado ao carregar os dados: {e}. Iniciando com dados padrão.")
-        lista_geral = ListaDeTarefas(id=gerar_id_unico(), nome="Geral")
+        lista_geral = ListaDeTarefas(id=1, nome="Geral")
         return [lista_geral], []

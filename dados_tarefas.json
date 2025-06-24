@@ -3,7 +3,11 @@
         {
             "id": 1,
             "nome": "Geral"
-        }
+        },
+        {
+            "id": 2,
+            "nome": "Teste"
+        } 
     ],
     "tarefas": [
         {
@@ -20,8 +24,8 @@
             "repeticao": "semanal"
         },
         {
-            "id": 3632587198,
-            "titulo": "Teste teste",
+            "id": 2,
+            "titulo": "dsois",
             "lista_id": 1,
             "concluida": false,
             "data_termino": null,

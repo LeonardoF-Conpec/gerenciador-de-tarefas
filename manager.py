@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from typing import List, Optional, Dict, Any
 
 # Importa os módulos e classes necessários
-from models import Tarefa, ListaDeTarefas, gerar_id_unico
+from models import Tarefa, ListaDeTarefas
 import persistence
 
 class TaskManager:
@@ -18,15 +18,30 @@ class TaskManager:
         self._listas, self._tarefas = persistence.carregar_dados()
         # Se não houver listas, garante que a padrão "Geral" exista e a salva
         if not self._listas:
-            lista_geral = ListaDeTarefas(id=gerar_id_unico(), nome="Geral")
+            lista_geral = ListaDeTarefas(id=1, nome="Geral")
             self._listas.append(lista_geral)
             self._salvar_tudo()
+
 
     def _salvar_tudo(self):
         """Função auxiliar privada para salvar o estado atual no arquivo."""
         persistence.salvar_dados(self._listas, self._tarefas)
 
-    # --- Métodos de Gerenciamento de Listas ---
+
+    def _gerar_proximo_id_lista(self) -> int:
+        """Gera o próximo ID sequencial para uma lista."""
+        if not self._listas:
+            return 1
+        # Encontra o maior ID atual e retorna o próximo número
+        return max(lista.id for lista in self._listas) + 1
+
+
+    def _gerar_proximo_id_tarefa(self) -> int:
+        """Gera o próximo ID sequencial para uma tarefa."""
+        if not self._tarefas:
+            return 1
+        return max(tarefa.id for tarefa in self._tarefas) + 1
+
 
     def get_todas_listas(self) -> List[ListaDeTarefas]:
         """Retorna uma cópia de todas as listas de tarefas."""
@@ -50,7 +65,8 @@ class TaskManager:
             print(f"Erro: Uma lista com o nome '{nome}' já existe.")
             return None
         
-        nova_lista = ListaDeTarefas(id=gerar_id_unico(), nome=nome)
+        novo_id = self._gerar_proximo_id_lista()
+        nova_lista = ListaDeTarefas(id=novo_id, nome=nome)
         self._listas.append(nova_lista)
         self._salvar_tudo()
         return nova_lista
@@ -91,8 +107,9 @@ class TaskManager:
         """
         Adiciona uma nova tarefa à uma lista específica.
         """
+        novo_id = self._gerar_proximo_id_tarefa()
         nova_tarefa = Tarefa(
-            id=gerar_id_unico(),
+            id=novo_id,
             titulo=dados_tarefa['titulo'],
             lista_id=dados_tarefa['lista_id'],
             data_termino=dados_tarefa.get('data_termino'),

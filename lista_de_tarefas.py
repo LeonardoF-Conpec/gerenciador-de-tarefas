@@ -1,5 +1,5 @@
 from manager import TaskManager
-import ui  # Importa todo o módulo de UI
+import ui
 
 def visualizar_tarefas(gerenciador: TaskManager):
     """Lógica para o submenu de visualização de tarefas."""
@@ -100,7 +100,7 @@ def main():
         elif escolha == '3':
             ui.clear_screen()
             ui.imprimir_cabecalho("Concluir Tarefa")
-            visualizar_tarefas(gerenciador) # Mostra tarefas para o usuário escolher
+            visualizar_tarefas(gerenciador)
             tarefa_id = ui.obter_id_para_acao("concluir")
             if tarefa_id:
                 tarefa_concluida = gerenciador.concluir_tarefa(tarefa_id)

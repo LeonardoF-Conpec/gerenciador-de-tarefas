@@ -1,13 +1,5 @@
-import uuid
 from datetime import date, timedelta
 from typing import List, Optional, Dict, Any
-
-# Uma função auxiliar para gerar IDs únicos para novas tarefas e listas.
-# Usar uma função garante que o ID seja sempre um inteiro, facilitando a manipulação.
-def gerar_id_unico() -> int:
-    """Gera um ID numérico único baseado em UUID."""
-    # Gera um UUID, pega seus dígitos e trunca para um comprimento razoável
-    return uuid.uuid4().int & (1<<32)-1
 
 class Tarefa:
     """
