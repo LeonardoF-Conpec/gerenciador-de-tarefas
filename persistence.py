@@ -57,7 +57,7 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
         return [lista_geral], []
 
     try:
-        # Abre o arquivo em modo de leitura ('r')
+        # Abre o arquivo em modo de leitura
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             # Verifica se o arquivo está vazio para evitar erros de decodificação
             if os.path.getsize(DATA_FILE) == 0:
@@ -76,12 +76,12 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
             print("Dados carregados com sucesso!")
             return listas_carregadas, tarefas_carregadas
 
-    except (json.JSONDecodeError, KeyError) as e:
-        print(f"Erro ao ler ou decodificar o arquivo JSON: {e}. Iniciando com dados padrão.")
+    except (json.JSONDecodeError, KeyError) as error:
+        print(f"Erro ao ler ou decodificar o arquivo JSON: {error}. Iniciando com dados padrão.")
         # Se o arquivo estiver corrompido ou mal formatado, começa com uma lista padrão.
         lista_geral = ListaDeTarefas(id=1, nome="Geral")
         return [lista_geral], []
-    except Exception as e:
-        print(f"Ocorreu um erro inesperado ao carregar os dados: {e}. Iniciando com dados padrão.")
+    except Exception as error:
+        print(f"Ocorreu um erro inesperado ao carregar os dados: {error}. Iniciando com dados padrão.")
         lista_geral = ListaDeTarefas(id=1, nome="Geral")
         return [lista_geral], []

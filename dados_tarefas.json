@@ -7,7 +7,11 @@
         {
             "id": 2,
             "nome": "Teste"
-        } 
+        },
+        {
+            "id": 3,
+            "nome": "Teste3"
+        }
     ],
     "tarefas": [
         {
@@ -25,13 +29,13 @@
         },
         {
             "id": 2,
-            "titulo": "dsois",
-            "lista_id": 1,
+            "titulo": "teste tres",
+            "lista_id": 3,
             "concluida": false,
             "data_termino": null,
             "prioridade": "nenhuma",
             "tags": [],
-            "notas": "",
+            "notas": "Leo",
             "repeticao": "nunca"
         }
     ]

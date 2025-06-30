@@ -1,5 +1,5 @@
 import copy
-from datetime import date, timedelta
+from datetime import timedelta
 from typing import List, Optional, Dict, Any
 
 # Importa os módulos e classes necessários
@@ -47,12 +47,14 @@ class TaskManager:
         """Retorna uma cópia de todas as listas de tarefas."""
         return self._listas.copy()
     
+
     def buscar_lista_por_id(self, lista_id: int) -> Optional[ListaDeTarefas]:
         """Busca e retorna uma lista pelo seu ID."""
         for lista in self._listas:
             if lista.id == lista_id:
                 return lista
         return None
+
 
     def adicionar_lista(self, nome: str) -> Optional[ListaDeTarefas]:
         """
@@ -70,6 +72,26 @@ class TaskManager:
         self._listas.append(nova_lista)
         self._salvar_tudo()
         return nova_lista
+
+
+    def editar_lista(self, lista_id: int, novo_nome: str) -> Optional[ListaDeTarefas]:
+        """
+        Edita o nome de uma lista existente, prevenindo nomes duplicados.
+        """
+        # Validação para nome duplicado (ignorando a própria lista que está sendo editada)
+        if any(l.nome.lower() == novo_nome.lower() for l in self._listas if l.id != lista_id):
+            print(f"Erro: Uma lista com o nome '{novo_nome}' já existe.")
+            return None
+
+        lista_para_editar = self.buscar_lista_por_id(lista_id)
+        if not lista_para_editar:
+            print("Erro: Lista não encontrada.")
+            return None
+            
+        lista_para_editar.nome = novo_nome
+        self._salvar_tudo()
+        return lista_para_editar
+
 
     def remover_lista(self, lista_id: int) -> bool:
         """
@@ -96,12 +118,41 @@ class TaskManager:
         """Retorna uma cópia de todas as tarefas."""
         return self._tarefas.copy()
 
+
+    def buscar_tarefas_por_termo(self, termo: str) -> List[Tarefa]:
+        """
+        Busca tarefas que contenham o termo no título, notas ou tags.
+        A busca não diferencia maiúsculas de minúsculas.
+        """
+        termo = termo.lower()
+        tarefas_encontradas = []
+        for tarefa in self._tarefas:
+            # Verifica o título
+            if termo in tarefa.titulo.lower():
+                tarefas_encontradas.append(tarefa)
+                continue # Pula para a próxima tarefa para não adicionar duplicado
+            
+            # Verifica as notas
+            if tarefa.notas and termo in tarefa.notas.lower():
+                tarefas_encontradas.append(tarefa)
+                continue
+
+            # Verifica as tags
+            for tag in tarefa.tags:
+                if termo in tag.lower():
+                    tarefas_encontradas.append(tarefa)
+                    break # Sai do loop de tags e vai para a próxima tarefa
+        
+        return tarefas_encontradas
+
+
     def buscar_tarefa_por_id(self, tarefa_id: int) -> Optional[Tarefa]:
         """Busca e retorna uma tarefa pelo seu ID."""
         for tarefa in self._tarefas:
             if tarefa.id == tarefa_id:
                 return tarefa
         return None
+
 
     def adicionar_tarefa(self, dados_tarefa: Dict[str, Any]) -> Tarefa:
         """
@@ -122,6 +173,7 @@ class TaskManager:
         self._salvar_tudo()
         return nova_tarefa
     
+
     def editar_tarefa(self, tarefa_id: int, novos_dados: Dict[str, Any]) -> Optional[Tarefa]:
         """
         Edita os atributos de uma tarefa existente.
@@ -137,6 +189,7 @@ class TaskManager:
         self._salvar_tudo()
         return tarefa
 
+
     def remover_tarefa(self, tarefa_id: int) -> bool:
         """Remove uma tarefa da lista."""
         tarefa = self.buscar_tarefa_por_id(tarefa_id)
@@ -146,6 +199,7 @@ class TaskManager:
         self._tarefas.remove(tarefa)
         self._salvar_tudo()
         return True
+
 
     def concluir_tarefa(self, tarefa_id: int) -> Optional[Tarefa]:
         """
@@ -160,7 +214,7 @@ class TaskManager:
         # Lógica para tarefas recorrentes
         if tarefa_original.repeticao != "nunca" and tarefa_original.data_termino:
             nova_tarefa = copy.deepcopy(tarefa_original) # Cria uma cópia profunda
-            nova_tarefa.id = gerar_id_unico()
+            nova_tarefa.id = self._gerar_proximo_id_tarefa()
             nova_tarefa.concluida = False
 
             # Calcula a nova data de término
@@ -180,4 +234,22 @@ class TaskManager:
 
         self._salvar_tudo()
         return tarefa_original
-    
+
+
+    def desmarcar_tarefa(self, tarefa_id: int) -> Optional[Tarefa]:
+        """Marca uma tarefa como não concluída."""
+        tarefa = self.buscar_tarefa_por_id(tarefa_id)
+        if tarefa:
+            tarefa.concluida = False
+            self._salvar_tudo()
+        return tarefa
+
+
+    def remover_tarefas_concluidas(self) -> int:
+        """Remove todas as tarefas concluídas e retorna o número de tarefas removidas."""
+        tarefas_para_manter = [t for t in self._tarefas if not t.concluida]
+        num_removidas = len(self._tarefas) - len(tarefas_para_manter)
+        self._tarefas = tarefas_para_manter
+        if num_removidas > 0:
+            self._salvar_tudo()
+        return num_removidas

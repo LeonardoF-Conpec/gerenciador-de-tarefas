@@ -8,8 +8,8 @@ Na edição das tarefas, no momento só é possível editar o nome da tarefa, o 
 
 Ao selecionar a opção 5 para gerenciar as listas de tarefa, não existe a opção de editar as listas de tarefas, onde deveria ser possível o usuário editar o título das tarefas, desde que isso não gere duas listas com o mesmo nome.
 
-Não foi implementado a busca por tarefas, onde deveria ser possível o usuário buscar por tarefas digitando um termo e todas as tarefas que contém esse texto no título, notas ou tags deveriam ser mostradas. E oo usuário deveria ser capaz de editar, remover ou marcar como concluídas estas tarefas.
+Não foi implementado a busca por tarefas, onde deveria ser possível o usuário buscar por tarefas digitando um termo e todas as tarefas que contém esse texto no título, notas ou tags deveriam ser mostradas. E o usuário deveria ser capaz de editar, remover ou marcar como concluídas estas tarefas.
 
 Também não foi implementado a parte de ver tarefas concluídas e de poder desmarcar alguma, remover uma ou remover todas as tarefas concluídas.
 
-Visualização de tarefas ainda falta muita coisa pra ser feita. também.
+Visualização de tarefas ainda falta muita coisa pra ser feita também.
