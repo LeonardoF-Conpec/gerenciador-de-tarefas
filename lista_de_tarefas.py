@@ -29,22 +29,23 @@ def visualizar_tarefas(gerenciador: TaskManager):
                 print(f"  ID: {lista.id} - {lista.nome}")
 
             try:
-                lista_id = int(input("Digite o ID da lista desejada: "))
+                lista_id = int(input("\nDigite o ID da lista desejada: "))
                 lista_obj = gerenciador.buscar_lista_por_id(lista_id)
                 if lista_obj:
                     tarefas_base = [t for t in todas_as_tarefas if t.lista_id == lista_id]
                     titulo_cabecalho = f"Tarefas da Lista: {lista_obj.nome}"
                 else:
-                    print("ID de lista inválido.")
+                    input("\nID não encontrado. Presssione ENTER para continuar...")
                     continue
             except ValueError:
-                print("ID inválido.")
+                input("\nID inválido. Presssione ENTER para continuar...")
                 continue
 
         elif contexto_escolha == '3': # Por Tag
             tag_escolhida = input("Digite a tag que deseja filtrar: ").lower()
 
             if not tag_escolhida:
+                input("\nTag não informada. Pressione ENTER para continuar...")
                 continue
 
             tarefas_base = [t for t in todas_as_tarefas if tag_escolhida in [tag.lower() for tag in t.tags]]
