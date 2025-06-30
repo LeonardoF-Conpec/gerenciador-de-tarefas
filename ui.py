@@ -8,17 +8,20 @@ from models import Tarefa
 
 def clear_screen():
     """Limpa a tela do terminal, compatível com Windows e Unix."""
+
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def pausar_e_limpar():
     """Pausa a execução até o usuário pressionar Enter e depois limpa a tela."""
+
     input("\nPressione Enter para continuar...")
     clear_screen()
 
 
 def imprimir_cabecalho(titulo: str):
     """Imprime um cabeçalho formatado."""
+
     print("=" * 40)
     print(f"{titulo.center(40)}")
     print("=" * 40)
@@ -33,6 +36,7 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
         tarefas (List[Tarefa]): A lista de objetos Tarefa a serem impressos.
         gerenciador (TaskManager): O gerenciador para buscar nomes de listas.
     """
+
     if not tarefas:
         print("Nenhuma tarefa encontrada para exibir.")
         return
@@ -58,6 +62,7 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
 
 def obter_dados_nova_tarefa(gerenciador: TaskManager) -> Optional[Dict[str, Any]]:
     """Coleta os dados do usuário para criar uma nova tarefa."""
+
     imprimir_cabecalho("Adicionar Nova Tarefa")
 
     listas = gerenciador.get_todas_listas()
@@ -107,6 +112,7 @@ def obter_dados_edicao_tarefa(tarefa: Tarefa, gerenciador: TaskManager) -> Dict[
     """
     Exibe um formulário de edição para a tarefa e retorna um dicionário com os campos alterados.
     """
+
     imprimir_cabecalho(f"Editando Tarefa ID: {tarefa.id}")
     print("Deixe o campo em branco e pressione Enter para manter o valor atual.")
 
@@ -146,16 +152,16 @@ def obter_dados_edicao_tarefa(tarefa: Tarefa, gerenciador: TaskManager) -> Dict[
     nova_repeticao = input(f"Repetição (diaria, semanal, mensal, anual, atual: {tarefa.repeticao}): ").lower()
     if nova_repeticao in ["diaria", "semanal", "mensal", "anual", "nunca"]:
         novos_dados["repeticao"] = nova_repeticao
-        
+
     # Editar Lista de Tarefas associada
     print("\nListas disponíveis para mover a tarefa:")
     listas = gerenciador.get_todas_listas()
     for lista in listas:
         print(f"  ID: {lista.id} - {lista.nome}")
-    
+
     mapa_listas = {lista.id: lista.nome for lista in listas}
     lista_atual_nome = mapa_listas.get(tarefa.lista_id, "Desconhecida")
-    
+
     novo_lista_id_str = input(f"Novo ID da lista (atual: {tarefa.lista_id} - {lista_atual_nome}): ")
     if novo_lista_id_str:
         try:
@@ -172,6 +178,7 @@ def obter_dados_edicao_tarefa(tarefa: Tarefa, gerenciador: TaskManager) -> Dict[
 
 def obter_id_para_acao(acao: str) -> Optional[int]:
     """Pede ao usuário um ID de tarefa para uma ação específica."""
+
     try:
         id_str = input(f"Digite o ID da tarefa que deseja {acao}: ")
         return int(id_str)
@@ -182,11 +189,13 @@ def obter_id_para_acao(acao: str) -> Optional[int]:
 
 def obter_termo_busca() -> str:
     """Pede ao usuário um termo para a busca."""
+
     return input("Digite o termo que deseja buscar no título, notas ou tags: ")
 
 
 def menu_busca_acoes() -> str:
     """Exibe as opções de ação após uma busca e retorna a escolha."""
+
     print("Ações disponíveis para os resultados da busca:")
     print("1. Concluir tarefa")
     print("2. Editar tarefa")
@@ -197,6 +206,7 @@ def menu_busca_acoes() -> str:
 
 def menu_contexto_visualizacao() -> str:
     """Pergunta ao usuário o contexto principal da visualização."""
+
     imprimir_cabecalho("Opções de Visualização")
     print("Como você deseja visualizar as tarefas?")
     print("1. Por Lista de Tarefas")
@@ -208,6 +218,7 @@ def menu_contexto_visualizacao() -> str:
 
 def menu_filtro_secundario() -> str:
     """Pergunta ao usuário o filtro secundário a ser aplicado."""
+
     print("\nAplicar qual filtro?")
     print("1. Ver todas as tarefas neste contexto")
     print("2. Apenas tarefas para hoje (e atrasadas)")
@@ -218,6 +229,7 @@ def menu_filtro_secundario() -> str:
 
 def menu_escolha_ordenacao() -> str:
     """Pergunta ao usuário como ele deseja ordenar as tarefas."""
+
     print("\nEscolha a ordem de visualização:")
     print("1. Padrão (ordenar por Data)")
     print("2. Ordenar por Prioridade")
@@ -226,6 +238,7 @@ def menu_escolha_ordenacao() -> str:
 
 def menu_acoes_gerais() -> str:
     """Exibe o menu de ações para a lista de todas as tarefas."""
+
     print("\nAções disponíveis:")
     print("1. Concluir uma tarefa")
     print("2. Desmarcar uma tarefa (tornar pendente)")
@@ -237,6 +250,7 @@ def menu_acoes_gerais() -> str:
 
 def menu_acoes_pendentes() -> str:
     """Exibe o menu de ações para a lista de tarefas pendentes."""
+
     print("\nAções para tarefas pendentes:")
     print("1. Concluir uma tarefa")
     print("2. Editar uma tarefa")
@@ -247,6 +261,7 @@ def menu_acoes_pendentes() -> str:
 
 def menu_acoes_concluidas() -> str:
     """Exibe o menu de ações para a lista de tarefas concluídas."""
+
     print("\nAções para tarefas concluídas:")
     print("1. Desmarcar uma tarefa (tornar pendente)")
     print("2. Remover uma tarefa permanentemente")
@@ -257,6 +272,7 @@ def menu_acoes_concluidas() -> str:
 
 def menu_principal():
     """Exibe o menu principal e retorna a escolha do usuário."""
+
     imprimir_cabecalho("Gerenciador de Tarefas")
     print("1. Visualizar Tarefas")
     print("2. Adicionar Tarefa")

@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Dict, Any, Tuple
+from typing import List, Tuple
 
 # Importa as classes do seu módulo de modelos
 from models import Tarefa, ListaDeTarefas
@@ -8,6 +8,7 @@ from models import Tarefa, ListaDeTarefas
 # Define o nome do arquivo de dados como uma constante.
 # Facilita a alteração do nome do arquivo em um só lugar, se necessário.
 DATA_FILE = "dados_tarefas.json"
+
 
 def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
     """
@@ -26,7 +27,7 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
             "listas": [lista.to_dict() for lista in listas],
             "tarefas": [tarefa.to_dict() for tarefa in tarefas]
         }
-        
+
         # Abre o arquivo em modo de escrita ('w')
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             # Usa json.dump para escrever o dicionário no arquivo.
@@ -38,6 +39,7 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
         print(f"Erro ao salvar o arquivo: {e}")
     except Exception as e:
         print(f"Ocorreu um erro inesperado ao salvar os dados: {e}")
+
 
 def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
     """
@@ -69,10 +71,10 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
 
             # Recria os objetos ListaDeTarefas a partir dos dicionários no arquivo
             listas_carregadas = [ListaDeTarefas.from_dict(d) for d in dados.get("listas", [])]
-            
+
             # Recria os objetos Tarefa a partir dos dicionários no arquivo
             tarefas_carregadas = [Tarefa.from_dict(d) for d in dados.get("tarefas", [])]
-            
+
             print("Dados carregados com sucesso!")
             return listas_carregadas, tarefas_carregadas
 

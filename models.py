@@ -1,6 +1,7 @@
 from datetime import date
 from typing import List, Optional, Dict, Any
 
+
 class Tarefa:
     """
     Representa uma única tarefa no gerenciador.
@@ -79,6 +80,7 @@ class Tarefa:
             notas=data.get("notas"),
             repeticao=data.get("repeticao")
         )
+
 
 class ListaDeTarefas:
     """
