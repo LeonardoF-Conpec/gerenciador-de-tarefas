@@ -2,6 +2,7 @@
 
 ### Integrantes:
 **Leonardo Franco Silva** (205007)
+
 **Murilo Tsuda** (239797)
 
 ---
@@ -115,7 +116,7 @@ Para começar, execute o script principal no seu terminal.
 python lista_de_tarefas.py
 ```
 
-Você será saudado com o menu principal:
+Você irá se deparar com o menu principal:
 
 ```
 ========================================
