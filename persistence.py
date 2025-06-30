@@ -1,8 +1,6 @@
 import json
 import os
 from typing import List, Tuple
-
-# Importa as classes do seu módulo de modelos
 from models import Tarefa, ListaDeTarefas
 
 # Define o nome do arquivo de dados como uma constante.

@@ -224,6 +224,7 @@ def menu_filtro_secundario() -> str:
     print("2. Apenas tarefas para hoje (e atrasadas)")
     print("3. Apenas tarefas para os próximos 7 dias (e atrasadas)")
     print("4. Apenas tarefas não concluídas")
+    print("5. Apenas tarefas concluídas")
     return input("\nEscolha uma opção de filtro: ")
 
 

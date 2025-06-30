@@ -67,77 +67,119 @@ def visualizar_tarefas(gerenciador: TaskManager):
         elif filtro_escolha == '4':
             tarefas_filtradas = [t for t in tarefas_base if not t.concluida]
 
+        elif filtro_escolha == '5':
+            tarefas_filtradas = [t for t in tarefas_base if t.concluida]
+
         else:
             print("Opção de filtro inválida.")
             continue
 
-        # Se não houver tarefas após o filtro, exibe a mensagem e volta
-        if not tarefas_filtradas:
-            ui.clear_screen()
-            ui.imprimir_cabecalho(titulo_cabecalho)
-            ui.imprimir_tarefas(tarefas_filtradas, gerenciador) # Exibe "Nenhuma tarefa..."
-            ui.pausar_e_limpar()
-            continue
-
-        # --- ESCOLHA DA ORDENAÇÃO ---
+        # Ordenação
         ordenacao_escolha = ui.menu_escolha_ordenacao()
 
         if ordenacao_escolha == '2':
-            tarefas_finais = ordenar_tarefas_por_prioridade(tarefas_filtradas)
+            tarefas_finais = ordenar_tarefas(tarefas_filtradas, "PRIORIDADE")
 
         else: # Padrão é 1 ou qualquer outra coisa
-            tarefas_finais = ordenar_tarefas_padrao(tarefas_filtradas)
+            tarefas_finais = ordenar_tarefas(tarefas_filtradas, "DATA")
 
         # Exibição final
         ui.clear_screen()
         ui.imprimir_cabecalho(titulo_cabecalho)
         ui.imprimir_tarefas(tarefas_finais, gerenciador)
+
+        if not tarefas_finais:
+            ui.pausar_e_limpar()
+            continue
+        
+        # --- LÓGICA DE AÇÃO CONTEXTUAL ---
+        if filtro_escolha == '4': # Apenas pendentes
+            escolha_acao = ui.menu_acoes_pendentes()
+            if escolha_acao == '4':
+                continue
+            
+            if escolha_acao == '1': # Concluir
+                tarefa_id = ui.obter_id_para_acao("concluir")
+                if tarefa_id and gerenciador.concluir_tarefa(tarefa_id):
+                    print("Tarefa concluída!")
+
+            elif escolha_acao == '2': # Editar
+                tarefa_id = ui.obter_id_para_acao("editar")
+                tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
+                if tarefa:
+                    novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
+                    if novos_dados: gerenciador.editar_tarefa(tarefa_id, novos_dados); print("Tarefa editada!")
+
+            elif escolha_acao == '3': # Remover
+                tarefa_id = ui.obter_id_para_acao("remover")
+                if tarefa_id and gerenciador.remover_tarefa(tarefa_id):
+                    print("Tarefa removida!")
+
+        elif filtro_escolha == '5': # Apenas concluídas
+            escolha_acao = ui.menu_acoes_concluidas()
+            if escolha_acao == '4':
+                continue
+
+            if escolha_acao == '1': # Desmarcar
+                tarefa_id = ui.obter_id_para_acao("desmarcar")
+                if tarefa_id and gerenciador.desmarcar_tarefa(tarefa_id):
+                    print("Tarefa desmarcada!")
+
+            elif escolha_acao == '2': # Remover uma
+                tarefa_id = ui.obter_id_para_acao("remover")
+                if tarefa_id and gerenciador.remover_tarefa(tarefa_id):
+                    print("Tarefa removida!")
+
+            elif escolha_acao == '3': # Remover todas
+                confirmacao = input("Remover TODAS as concluídas? (s/n): ").lower()
+                if confirmacao == 's':
+                    num = gerenciador.remover_tarefas_concluidas()
+                    print(f"{num} tarefas removidas.")
+        
+        else: # Filtros mistos (1, 2, 3)
+            escolha_acao = ui.menu_acoes_gerais()
+            if escolha_acao == '5':
+                continue
+
+            if escolha_acao == '1': # Concluir
+                tarefa_id = ui.obter_id_para_acao("concluir")
+                if tarefa_id: gerenciador.concluir_tarefa(tarefa_id)
+
+            elif escolha_acao == '2': # Desmarcar
+                tarefa_id = ui.obter_id_para_acao("desmarcar")
+                if tarefa_id: gerenciador.desmarcar_tarefa(tarefa_id)
+
+            elif escolha_acao == '3': # Editar
+                tarefa_id = ui.obter_id_para_acao("editar")
+                tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
+                if tarefa:
+                    novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
+                    if novos_dados: gerenciador.editar_tarefa(tarefa_id, novos_dados)
+                    
+            elif escolha_acao == '4': # Remover
+                tarefa_id = ui.obter_id_para_acao("remover")
+                if tarefa_id: gerenciador.remover_tarefa(tarefa_id)
+        
+        # Pausa antes de recarregar o loop de filtros
         ui.pausar_e_limpar()
 
 
-def ordenar_tarefas_padrao(tarefas: List[Tarefa]) -> List[Tarefa]:
+def ordenar_tarefas(tarefas: List[Tarefa], criterio: str ) -> List[Tarefa]:
     """
-    Ordena uma lista de tarefas pela regra padrão especificada no projeto.
-    1. Data de término (tarefas sem data vão para o final).
-    2. Prioridade (Alta > Média > Baixa > Nenhuma).
-    3. ID da Lista (ordem crescente).
+    Ordena uma lista de tarefas pelo criterio especificado.
     """
 
-    # Mapeia a prioridade para um valor numérico para ordenação correta.
-    # Números menores têm maior prioridade.
     prioridade_map = {"alta": 0, "media": 1, "baixa": 2, "nenhuma": 3}
 
     def sort_key(tarefa: Tarefa):
-        # Para tarefas sem data, usamos uma data muito distante (date.max)
-        # para garantir que elas fiquem no final.
         data_key = tarefa.data_termino if tarefa.data_termino is not None else date.max
-
-        # Pega o valor da prioridade do mapa. Usa 4 como padrão para casos inesperados.
         prioridade_key = prioridade_map.get(tarefa.prioridade.lower(), 4)
-
-        # O ID da lista já é numérico e serve para o desempate final.
         lista_key = tarefa.lista_id
 
-        # Retorna uma tupla. O Python ordena pelo primeiro elemento,
-        # depois pelo segundo em caso de empate, e assim por diante.
+        if criterio == "PRIORIDADE":
+            return (prioridade_key, data_key, lista_key)
+
         return (data_key, prioridade_key, lista_key)
-
-    return sorted(tarefas, key=sort_key)
-
-
-def ordenar_tarefas_por_prioridade(tarefas: List[Tarefa]) -> List[Tarefa]:
-    """
-    Ordena uma lista de tarefas por Prioridade, Data e ID da Lista.
-    """
-
-    prioridade_map = {"alta": 0, "media": 1, "baixa": 2, "nenhuma": 3}
-
-    def sort_key(tarefa: Tarefa):
-        data_key = tarefa.data_termino if tarefa.data_termino is not None else date.max
-        prioridade_key = prioridade_map.get(tarefa.prioridade.lower(), 4)
-        lista_key = tarefa.lista_id
-        # Apenas a ordem da tupla é alterada aqui
-        return (prioridade_key, data_key, lista_key)
 
     return sorted(tarefas, key=sort_key)
 
@@ -147,7 +189,7 @@ def gerenciar_tarefas_pendentes(gerenciador: TaskManager):
 
     ui.imprimir_cabecalho("Tarefas Pendentes")
     tarefas_pendentes = [t for t in gerenciador.get_todas_tarefas() if not t.concluida]
-    tarefas_pendentes_ordenadas = ordenar_tarefas_padrao(tarefas_pendentes)
+    tarefas_pendentes_ordenadas = ordenar_tarefas(tarefas_pendentes, "DATA")
     ui.imprimir_tarefas(tarefas_pendentes_ordenadas, gerenciador)
 
     if not tarefas_pendentes:
@@ -204,7 +246,7 @@ def gerenciar_tarefas_concluidas(gerenciador: TaskManager):
 
     ui.imprimir_cabecalho("Tarefas Concluídas")
     tarefas_concluidas = [t for t in gerenciador.get_todas_tarefas() if t.concluida]
-    tarefas_concluidas_ordenadas = ordenar_tarefas_padrao(tarefas_concluidas)
+    tarefas_concluidas_ordenadas = ordenar_tarefas(tarefas_concluidas, "DATA")
     ui.imprimir_tarefas(tarefas_concluidas_ordenadas, gerenciador)
 
     # Se não houver tarefas concluídas, apenas informa e retorna.
@@ -247,7 +289,7 @@ def gerenciar_todas_as_tarefas(gerenciador: TaskManager):
 
     ui.imprimir_cabecalho("Todas as Tarefas")
     todas_as_tarefas = gerenciador.get_todas_tarefas()
-    todas_as_tarefas_ordenadas = ordenar_tarefas_padrao(todas_as_tarefas)
+    todas_as_tarefas_ordenadas = ordenar_tarefas(todas_as_tarefas, "DATA")
     ui.imprimir_tarefas(todas_as_tarefas_ordenadas, gerenciador)
 
     if not todas_as_tarefas:
@@ -364,10 +406,8 @@ def gerenciar_listas(gerenciador: TaskManager):
 
     if escolha == '1':
         nome_lista = input("Digite o nome da nova lista: ")
-
         if nome_lista:
             nova_lista_obj = gerenciador.adicionar_lista(nome_lista)
-
             if nova_lista_obj:
                 print(f"Lista '{nome_lista}' adicionada com sucesso.")
 
@@ -379,16 +419,12 @@ def gerenciar_listas(gerenciador: TaskManager):
             # Verifica se a lista existe antes de pedir o novo nome
             if gerenciador.buscar_lista_por_id(lista_id):
                 novo_nome = input("Digite o novo nome para a lista: ")
-
                 if novo_nome:
                     lista_editada = gerenciador.editar_lista(lista_id, novo_nome)
-
                     if lista_editada:
                         print("Nome da lista atualizado com sucesso!")
-
                 else:
                     print("O nome não pode ser vazio.")
-
             else:
                 print("Erro: Lista com o ID informado não encontrada.")
 
@@ -404,15 +440,11 @@ def gerenciar_listas(gerenciador: TaskManager):
 
             if lista:
                 confirmacao = input(f"Isso removerá a lista '{lista.nome}' e todas as suas tarefas. Tem certeza? (s/n): ").lower()
-
                 if confirmacao == 's':
-
                     if gerenciador.remover_lista(lista_id):
                         print("Lista removida com sucesso.")
-
                 else:
                     print("Remoção cancelada.")
-
             else:
                 print("Erro: Lista com o ID informado não encontrada.")
 
@@ -431,7 +463,7 @@ def iniciar_busca(gerenciador: TaskManager):
         return
 
     resultados = gerenciador.buscar_tarefas_por_termo(termo)
-    resultados = ordenar_tarefas_padrao(resultados)
+    resultados = ordenar_tarefas(resultados, "DATA")
 
     print("\n--- Resultados da Busca ---")
     ui.imprimir_tarefas(resultados, gerenciador)
