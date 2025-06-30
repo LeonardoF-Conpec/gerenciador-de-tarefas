@@ -58,7 +58,7 @@ Este é o **ponto de entrada principal** da aplicação. É o arquivo que você 
 - **Responsabilidade**: Orquestrar o fluxo do programa. Ele contém o loop principal que exibe o menu inicial e direciona o usuário para as diferentes funcionalidades (visualizar, adicionar, buscar, etc.) com base na sua escolha.
 - **Como funciona**: Ele cria uma instância do `TaskManager` e entra em um loop `while`, chamando funções do módulo `ui` para interagir com o usuário e, em seguida, acionando os métodos apropriados no `gerenciador` para executar as ações.
 
-##### Bibliotecas e Importações Utilizadas
+#### Bibliotecas e Importações Utilizadas
 
 -   **`from datetime import date, timedelta`**: Utilizado para manipular datas. `date` é usado para obter a data atual (`today`) e `timedelta` para calcular períodos de tempo, como os "próximos 7 dias".
 -   **`from typing import List`**: Usado para "Type Hinting", que, no Python, é um meio de mostrar o tipo que é esperado do retorno de algo, ajudando a tornar o código mais legível e a evitar erros, especificando que uma variável deve ser uma lista de um determinado tipo (ex: `List[Tarefa]`).
@@ -77,7 +77,7 @@ Este arquivo pode ser considerado o **cérebro da aplicação**. Ele contém a c
     - Buscar tarefas por termos.
 - **Como funciona**: A classe `TaskManager` mantém o estado atual das listas e tarefas em memória (`self._listas`, `self._tarefas`). Sempre que uma alteração é feita, ela chama as funções do módulo `persistence` para salvar os dados no arquivo JSON.
 
-##### Bibliotecas e Importações Utilizadas
+#### Bibliotecas e Importações Utilizadas
 
 -   **`import copy`**: Utilizado especificamente para a função `copy.deepcopy()`. Isso é crucial para criar uma cópia totalmente independente de uma tarefa ao lidar com tarefas recorrentes, evitando que a nova tarefa e a antiga compartilhem referências.
 -   **`from datetime import timedelta`**: Usado para calcular a data da próxima ocorrência de tarefas repetitivas (diária, semanal, etc.).
@@ -93,7 +93,7 @@ Este arquivo define as **estruturas de dados** do projeto. Ele contém as classe
 - **`ListaDeTarefas`**: Representa uma lista que agrupa tarefas. Contém atributos como `id` e `nome`.
 - **Funcionalidades Chave**: Ambas as classes possuem os métodos `to_dict()` e `from_dict()`, que convertem os objetos Python em um formato (dicionário) que pode ser facilmente salvo como JSON, e vice-versa.
 
-##### Bibliotecas e Importações Utilizadas
+#### Bibliotecas e Importações Utilizadas
 
 -   **`from datetime import date`**: Usado para tipar o atributo `data_termino` na classe `Tarefa` e para converter as datas entre o formato de string (para salvar em JSON) e objetos `date` do Python.
 -   **`from typing import List, Optional, Dict, Any`**: Usado para a tipagem dos atributos das classes, melhorando a clareza e a manutenibilidade do código.
@@ -108,7 +108,7 @@ Este módulo é responsável por toda a **interação com o usuário**. Ele sepa
     - **Capturar Entradas**: Contém funções para obter dados do usuário, como os detalhes de uma nova tarefa, o ID de uma tarefa a ser editada ou o termo para uma busca.
     - **Funções Auxiliares**: Inclui funções úteis como `clear_screen()` para limpar a tela do terminal e `pausar_e_limpar()` para melhorar a experiência do usuário.
 
-##### Bibliotecas e Importações Utilizadas
+#### Bibliotecas e Importações Utilizadas
 
 -   **`import os`**: Biblioteca padrão do Python para interagir com o sistema operacional. É usada na função `clear_screen()` para executar o comando `cls` (no Windows) ou `clear` (em Linux/macOS) e limpar a tela do terminal.
 -   **`from datetime import date`**: Utilizado para verificar se uma tarefa está atrasada, comparando sua data de término com a data atual (`date.today()`).
@@ -124,7 +124,7 @@ Este módulo lida com a **leitura e escrita de dados** no disco. Sua única resp
 - **`salvar_dados()`**: Recebe as listas de objetos `Tarefa` e `ListaDeTarefas`, converte-as em dicionários usando os métodos `to_dict()`, e as escreve no arquivo JSON.
 - **`carregar_dados()`**: Lê o arquivo JSON, converte os dados de volta para objetos Python usando os métodos `from_dict()`, e os retorna para o `TaskManager`. Se o arquivo não existir, ele cria uma estrutura de dados padrão.
 
-##### Bibliotecas e Importações Utilizadas
+#### Bibliotecas e Importações Utilizadas
 
 -   **`import json`**: Biblioteca essencial para a codificação e decodificação de dados no formato JSON. `json.dump()` é usado para escrever no arquivo, e `json.load()` para ler.
 -   **`import os`**: Usado para interagir com o sistema de arquivos. `os.path.exists()` verifica se o arquivo de dados já existe, e `os.path.getsize()` verifica se o arquivo não está vazio antes de tentar lê-lo.
