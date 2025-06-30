@@ -7,10 +7,6 @@
         {
             "id": 2,
             "nome": "Teste"
-        },
-        {
-            "id": 3,
-            "nome": "Teste3"
         }
     ],
     "tarefas": [
@@ -18,25 +14,15 @@
             "id": 1,
             "titulo": "Teste 2",
             "lista_id": 1,
-            "concluida": true,
+            "concluida": false,
             "data_termino": "2025-12-12",
             "prioridade": "alta",
             "tags": [
-                "estudos"
+                "estudos",
+                "teste leo"
             ],
             "notas": "",
             "repeticao": "semanal"
-        },
-        {
-            "id": 2,
-            "titulo": "teste tres",
-            "lista_id": 3,
-            "concluida": false,
-            "data_termino": null,
-            "prioridade": "nenhuma",
-            "tags": [],
-            "notas": "Leo",
-            "repeticao": "nunca"
         }
     ]
 }

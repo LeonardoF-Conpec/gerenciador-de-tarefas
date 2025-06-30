@@ -45,7 +45,7 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
     mapa_listas = {lista.id: lista.nome for lista in gerenciador.get_todas_listas()}
 
     for tarefa in tarefas:
-        status = "✓" if tarefa.concluida else "✗"
+        status = "✓" if tarefa.concluida else " "
         data_str = tarefa.data_termino.strftime('%d/%m/%Y') if tarefa.data_termino else "Sem data"
 
         # Adiciona um marcador de atraso
@@ -55,7 +55,7 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
         nome_lista = mapa_listas.get(tarefa.lista_id, "Desconhecida")
         tags_str = f"Tags: {', '.join(tarefa.tags)}" if tarefa.tags else ""
 
-        print(f"[{status}] ID: {tarefa.id:<5} | {tarefa.titulo:<30} | Data: {data_str:<20} | Lista: {nome_lista:<15} | Prio: {tarefa.prioridade.capitalize():<8} {tags_str}")
+        print(f"[{status}] ID: {tarefa.id:<5} | {tarefa.titulo:<30} | Data: {data_str:<20} | Lista: {nome_lista:<15} | Prioridade: {tarefa.prioridade.capitalize():<8} | {tags_str}")
         if tarefa.notas:
             print(f"    Notas: {tarefa.notas}")
 
@@ -209,9 +209,9 @@ def menu_contexto_visualizacao() -> str:
 
     imprimir_cabecalho("Opções de Visualização")
     print("Como você deseja visualizar as tarefas?")
-    print("1. Por Lista de Tarefas")
-    print("2. Por Tag")
-    print("3. Todas as Tarefas (geral)")
+    print("1. Todas as Tarefas (geral)")
+    print("2. Por Lista de Tarefas")
+    print("3. Por Tag")
     print("4. Voltar")
     return input("\nEscolha uma opção: ")
 
@@ -232,7 +232,7 @@ def menu_escolha_ordenacao() -> str:
     """Pergunta ao usuário como ele deseja ordenar as tarefas."""
 
     print("\nEscolha a ordem de visualização:")
-    print("1. Padrão (ordenar por Data)")
+    print("1. Ordenar por Data (Padrão)")
     print("2. Ordenar por Prioridade")
     return input("Escolha uma opção de ordenação (padrão é 1): ")
 

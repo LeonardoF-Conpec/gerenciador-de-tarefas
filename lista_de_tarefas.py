@@ -9,6 +9,7 @@ def visualizar_tarefas(gerenciador: TaskManager):
     """Guia o usuário através de um processo de filtragem em cascata."""
 
     while True:
+        ui.clear_screen()
         contexto_escolha = ui.menu_contexto_visualizacao()
         if contexto_escolha == '4':
             break
@@ -17,7 +18,11 @@ def visualizar_tarefas(gerenciador: TaskManager):
         titulo_cabecalho = "Tarefas"
         todas_as_tarefas = gerenciador.get_todas_tarefas()
 
-        if contexto_escolha == '1': # Por Lista
+        if contexto_escolha == '1': # Todas
+            tarefas_base = todas_as_tarefas
+            titulo_cabecalho = "Todas as Tarefas"
+
+        elif contexto_escolha == '2': # Por Lista
             listas = gerenciador.get_todas_listas()
 
             for lista in listas:
@@ -35,7 +40,8 @@ def visualizar_tarefas(gerenciador: TaskManager):
             except ValueError:
                 print("ID inválido.")
                 continue
-        elif contexto_escolha == '2': # Por Tag
+
+        elif contexto_escolha == '3': # Por Tag
             tag_escolhida = input("Digite a tag que deseja filtrar: ").lower()
 
             if not tag_escolhida:
@@ -43,9 +49,7 @@ def visualizar_tarefas(gerenciador: TaskManager):
 
             tarefas_base = [t for t in todas_as_tarefas if tag_escolhida in [tag.lower() for tag in t.tags]]
             titulo_cabecalho = f"Tarefas com a Tag: {tag_escolhida}"
-        elif contexto_escolha == '3': # Todas
-            tarefas_base = todas_as_tarefas
-            titulo_cabecalho = "Todas as Tarefas"
+
         else:
             print("Opção de contexto inválida.")
             continue
@@ -91,13 +95,12 @@ def visualizar_tarefas(gerenciador: TaskManager):
         if not tarefas_finais:
             ui.pausar_e_limpar()
             continue
-        
-        # --- LÓGICA DE AÇÃO CONTEXTUAL ---
+
         if filtro_escolha == '4': # Apenas pendentes
             escolha_acao = ui.menu_acoes_pendentes()
             if escolha_acao == '4':
                 continue
-            
+
             if escolha_acao == '1': # Concluir
                 tarefa_id = ui.obter_id_para_acao("concluir")
                 if tarefa_id and gerenciador.concluir_tarefa(tarefa_id):
@@ -108,7 +111,9 @@ def visualizar_tarefas(gerenciador: TaskManager):
                 tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
                 if tarefa:
                     novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
-                    if novos_dados: gerenciador.editar_tarefa(tarefa_id, novos_dados); print("Tarefa editada!")
+                    if novos_dados:
+                        gerenciador.editar_tarefa(tarefa_id, novos_dados)
+                        print("Tarefa editada!")
 
             elif escolha_acao == '3': # Remover
                 tarefa_id = ui.obter_id_para_acao("remover")
@@ -135,7 +140,7 @@ def visualizar_tarefas(gerenciador: TaskManager):
                 if confirmacao == 's':
                     num = gerenciador.remover_tarefas_concluidas()
                     print(f"{num} tarefas removidas.")
-        
+
         else: # Filtros mistos (1, 2, 3)
             escolha_acao = ui.menu_acoes_gerais()
             if escolha_acao == '5':
@@ -143,31 +148,33 @@ def visualizar_tarefas(gerenciador: TaskManager):
 
             if escolha_acao == '1': # Concluir
                 tarefa_id = ui.obter_id_para_acao("concluir")
-                if tarefa_id: gerenciador.concluir_tarefa(tarefa_id)
+                if tarefa_id:
+                    gerenciador.concluir_tarefa(tarefa_id)
 
             elif escolha_acao == '2': # Desmarcar
                 tarefa_id = ui.obter_id_para_acao("desmarcar")
-                if tarefa_id: gerenciador.desmarcar_tarefa(tarefa_id)
+                if tarefa_id:
+                    gerenciador.desmarcar_tarefa(tarefa_id)
 
             elif escolha_acao == '3': # Editar
                 tarefa_id = ui.obter_id_para_acao("editar")
                 tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
                 if tarefa:
                     novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
-                    if novos_dados: gerenciador.editar_tarefa(tarefa_id, novos_dados)
-                    
+                    if novos_dados:
+                        gerenciador.editar_tarefa(tarefa_id, novos_dados)
+
             elif escolha_acao == '4': # Remover
                 tarefa_id = ui.obter_id_para_acao("remover")
-                if tarefa_id: gerenciador.remover_tarefa(tarefa_id)
-        
+                if tarefa_id:
+                    gerenciador.remover_tarefa(tarefa_id)
+
         # Pausa antes de recarregar o loop de filtros
         ui.pausar_e_limpar()
 
 
-def ordenar_tarefas(tarefas: List[Tarefa], criterio: str ) -> List[Tarefa]:
-    """
-    Ordena uma lista de tarefas pelo criterio especificado.
-    """
+def ordenar_tarefas(tarefas: List[Tarefa], criterio: str) -> List[Tarefa]:
+    """Ordena uma lista de tarefas pelo criterio especificado."""
 
     prioridade_map = {"alta": 0, "media": 1, "baixa": 2, "nenhuma": 3}
 
@@ -391,65 +398,69 @@ def gerenciar_tarefas_crud(gerenciador: TaskManager):
 def gerenciar_listas(gerenciador: TaskManager):
     """Lógica para o submenu de gerenciamento de listas."""
 
-    ui.imprimir_cabecalho("Gerenciar Listas")
-    listas = gerenciador.get_todas_listas()
-    print("Listas existentes:")
+    while True:
+        ui.imprimir_cabecalho("Gerenciar Listas")
+        listas = gerenciador.get_todas_listas()
+        print("Listas existentes:")
 
-    for lista in listas:
-        print(f"  ID: {lista.id} - {lista.nome}")
+        for lista in listas:
+            print(f"  ID: {lista.id} - {lista.nome}")
 
-    print("\nOpções:")
-    print("1. Adicionar nova lista")
-    print("2. Editar uma lista")
-    print("3. Remover uma lista")
-    escolha = input("O que você deseja fazer? ")
+        print("\nOpções:")
+        print("1. Adicionar nova lista")
+        print("2. Editar uma lista")
+        print("3. Remover uma lista")
+        print("4. Voltar")
+        escolha = input("\nEscolha uma opção: ")
 
-    if escolha == '1':
-        nome_lista = input("Digite o nome da nova lista: ")
-        if nome_lista:
-            nova_lista_obj = gerenciador.adicionar_lista(nome_lista)
-            if nova_lista_obj:
-                print(f"Lista '{nome_lista}' adicionada com sucesso.")
+        if escolha == '4':
+            break
 
-    elif escolha == '2':
-        try:
-            lista_id_str = input("Digite o ID da lista que deseja editar: ")
-            lista_id = int(lista_id_str)
+        if escolha == '1':
+            nome_lista = input("Digite o nome da nova lista: ")
+            if nome_lista:
+                nova_lista_obj = gerenciador.adicionar_lista(nome_lista)
+                if nova_lista_obj:
+                    print(f"Lista '{nome_lista}' adicionada com sucesso.")
 
-            # Verifica se a lista existe antes de pedir o novo nome
-            if gerenciador.buscar_lista_por_id(lista_id):
-                novo_nome = input("Digite o novo nome para a lista: ")
-                if novo_nome:
-                    lista_editada = gerenciador.editar_lista(lista_id, novo_nome)
-                    if lista_editada:
-                        print("Nome da lista atualizado com sucesso!")
+        elif escolha == '2':
+            try:
+                lista_id_str = input("Digite o ID da lista que deseja editar: ")
+                lista_id = int(lista_id_str)
+
+                # Verifica se a lista existe antes de pedir o novo nome
+                if gerenciador.buscar_lista_por_id(lista_id):
+                    novo_nome = input("Digite o novo nome para a lista: ")
+                    if novo_nome:
+                        lista_editada = gerenciador.editar_lista(lista_id, novo_nome)
+                        if lista_editada:
+                            print("Nome da lista atualizado com sucesso!")
+                    else:
+                        print("O nome não pode ser vazio.")
                 else:
-                    print("O nome não pode ser vazio.")
-            else:
-                print("Erro: Lista com o ID informado não encontrada.")
+                    print("Erro: Lista com o ID informado não encontrada.")
 
-        except ValueError:
-            print("Erro: ID inválido.")
+            except ValueError:
+                print("Erro: ID inválido.")
 
-    elif escolha == '3':
-        try:
-            lista_id = int(input("Digite o ID da lista a ser removida: "))
+        elif escolha == '3':
+            try:
+                lista_id = int(input("Digite o ID da lista a ser removida: "))
 
-            # Confirmação para evitar remoção acidental
-            lista = gerenciador.buscar_lista_por_id(lista_id)
+                lista = gerenciador.buscar_lista_por_id(lista_id)
 
-            if lista:
-                confirmacao = input(f"Isso removerá a lista '{lista.nome}' e todas as suas tarefas. Tem certeza? (s/n): ").lower()
-                if confirmacao == 's':
-                    if gerenciador.remover_lista(lista_id):
-                        print("Lista removida com sucesso.")
+                if lista:
+                    confirmacao = input(f"Isso removerá a lista '{lista.nome}' e todas as suas tarefas. Tem certeza? (s/n): ").lower()
+                    if confirmacao == 's':
+                        if gerenciador.remover_lista(lista_id):
+                            print("Lista removida com sucesso.")
+                    else:
+                        print("Remoção cancelada.")
                 else:
-                    print("Remoção cancelada.")
-            else:
-                print("Erro: Lista com o ID informado não encontrada.")
+                    print("Erro: Lista com o ID informado não encontrada.")
 
-        except ValueError:
-            print("ID inválido.")
+            except ValueError:
+                print("ID inválido.")
 
 
 def iniciar_busca(gerenciador: TaskManager):
@@ -500,6 +511,7 @@ def iniciar_busca(gerenciador: TaskManager):
                     if tarefa_concluida:
                         print(f"Tarefa '{tarefa_concluida.titulo}' concluída!")
                     break # Sai do loop de ações após concluir
+
                 elif escolha == '2': # Editar
                     tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
                     novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
@@ -507,6 +519,7 @@ def iniciar_busca(gerenciador: TaskManager):
                         gerenciador.editar_tarefa(tarefa_id, novos_dados)
                         print("\nTarefa editada com sucesso!")
                     break # Sai do loop de ações após editar
+
                 elif escolha == '3': # Remover
                     if gerenciador.remover_tarefa(tarefa_id):
                         print("Tarefa removida com sucesso!")
@@ -516,44 +529,39 @@ def iniciar_busca(gerenciador: TaskManager):
                 print("Erro: O ID fornecido não corresponde a uma tarefa nos resultados da busca.")
 
 
-def main():
-    """Função principal que executa o loop da aplicação."""
+# Código principal que roda loop da aplicação.
 
-    gerenciador = TaskManager()
+gerenciador = TaskManager()
 
-    while True:
-        escolha = ui.menu_principal()
+while True:
+    ui.clear_screen()
+    escolha = ui.menu_principal()
 
-        if escolha == '1':
-            ui.clear_screen()
-            visualizar_tarefas(gerenciador)
+    if escolha == '1':
+        ui.clear_screen()
+        visualizar_tarefas(gerenciador)
 
-        elif escolha == '2':
-            ui.clear_screen()
-            dados = ui.obter_dados_nova_tarefa(gerenciador)
-            if dados:
-                gerenciador.adicionar_tarefa(dados)
-                print("\nTarefa adicionada com sucesso!")
-            ui.pausar_e_limpar()
+    elif escolha == '2':
+        ui.clear_screen()
+        dados = ui.obter_dados_nova_tarefa(gerenciador)
+        if dados:
+            gerenciador.adicionar_tarefa(dados)
+            print("\nTarefa adicionada com sucesso!")
+        ui.pausar_e_limpar()
 
-        elif escolha == '3':
-            ui.clear_screen()
-            iniciar_busca(gerenciador)
-            ui.pausar_e_limpar()
+    elif escolha == '3':
+        ui.clear_screen()
+        iniciar_busca(gerenciador)
+        ui.pausar_e_limpar()
 
-        elif escolha == '4':
-            ui.clear_screen()
-            gerenciar_listas(gerenciador)
-            ui.pausar_e_limpar()
+    elif escolha == '4':
+        ui.clear_screen()
+        gerenciar_listas(gerenciador)
 
-        elif escolha == '5':
-            print("Obrigado por usar o Gerenciador de Tarefas! Até mais!")
-            break
+    elif escolha == '5':
+        print("Obrigado por usar o Gerenciador de Tarefas! Até mais!")
+        break
 
-        else:
-            print("Opção inválida, por favor tente novamente.")
-            ui.pausar_e_limpar()
-
-
-if __name__ == "__main__":
-    main()
+    else:
+        print("Opção inválida, por favor tente novamente.")
+        ui.pausar_e_limpar()

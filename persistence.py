@@ -13,11 +13,13 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
     Salva todas as listas e tarefas em um arquivo JSON.
     Esta função é chamada sempre que há uma alteração nos dados.
 
-    Args:
-        listas (List[ListaDeTarefas]): A lista de todos os objetos de lista.
-        tarefas (List[Tarefa]): A lista de todos os objetos de tarefa.
+    Parâmetros:
+
+    listas (List[ListaDeTarefas]): A lista contendo todos os objetos ListaDeTarefas.
+    tarefas (List[Tarefa]): A lista contendo todos os objetos Tarefa.
     """
-    print("Salvando dados...") # Feedback para o usuário/desenvolvedor
+
+    print("Salvando dados...") # Feedback
     try:
         # Cria um dicionário principal para armazenar ambas as listas de objetos
         dados_para_salvar = {
@@ -29,7 +31,7 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
         # Abre o arquivo em modo de escrita ('w')
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             # Usa json.dump para escrever o dicionário no arquivo.
-            # indent=4 torna o arquivo JSON legível para humanos, ótimo para depuração.
+            # indent=4 para deixar o JSON identado e mais legível.
             json.dump(dados_para_salvar, f, indent=4, ensure_ascii=False)
         print("Dados salvos com sucesso!")
 
@@ -48,6 +50,7 @@ def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:
         Tuple[List[ListaDeTarefas], List[Tarefa]]: Uma tupla contendo a lista
         de objetos ListaDeTarefas e a lista de objetos Tarefa.
     """
+
     # Verifica se o arquivo de dados não existe
     if not os.path.exists(DATA_FILE):
         print("Arquivo de dados não encontrado. Criando uma lista padrão 'Geral'.")

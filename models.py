@@ -3,9 +3,8 @@ from typing import List, Optional, Dict, Any
 
 
 class Tarefa:
-    """
-    Representa uma única tarefa no gerenciador.
-    """
+    """Representa uma única tarefa no gerenciador."""
+
     def __init__(self,
                  titulo: str,
                  id: int, # Cada tarefa terá um ID único em todo o sistema
@@ -21,11 +20,11 @@ class Tarefa:
 
         Args:
             titulo (str): O título ou descrição da tarefa.
-            id (int): O identificador numérico único da tarefa.
+            id (int): O ID da tarefa.
             lista_id (int): O ID da lista de tarefas à qual esta tarefa está associada.
             concluida (bool): O status de conclusão da tarefa. Padrão é False.
             data_termino (Optional[date]): A data de vencimento da tarefa.
-            prioridade (Optional[str]): A prioridade ('alta', 'media', 'baixa').
+            prioridade (Optional[str]): A prioridade ('alta', 'media', 'baixa', 'nenhuma').
             tags (Optional[List[str]]): Uma lista de tags para categorização.
             notas (Optional[str]): Notas ou detalhes adicionais sobre a tarefa.
             repeticao (Optional[str]): A frequência de repetição ('diaria', 'semanal', etc.).
@@ -42,12 +41,14 @@ class Tarefa:
 
     def __repr__(self) -> str:
         """Retorna uma representação legível da tarefa, útil para debug."""
-        status = "✓" if self.concluida else "✗"
+
+        status = "✓" if self.concluida else " "
         data_str = self.data_termino.strftime('%d/%m/%Y') if self.data_termino else "Sem data"
-        return f"[{status}] ID: {self.id} | {self.titulo} (Data: {data_str}, Prio: {self.prioridade})"
+        return f"[{status}] ID: {self.id} | {self.titulo} (Data: {data_str}, Prioridade: {self.prioridade})"
 
     def to_dict(self) -> Dict[str, Any]:
         """Converte o objeto Tarefa para um dicionário para serialização em JSON."""
+
         return {
             "id": self.id,
             "titulo": self.titulo,
@@ -64,6 +65,7 @@ class Tarefa:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Tarefa':
         """Cria um objeto Tarefa a partir de um dicionário (desserialização)."""
+
         data_termino = None
         if data.get("data_termino"):
             # Converte a string no formato ISO de volta para um objeto date
@@ -83,17 +85,17 @@ class Tarefa:
 
 
 class ListaDeTarefas:
-    """
-    Representa uma lista que contém várias tarefas.
-    """
+    """Representa uma lista que contém várias tarefas."""
+
     def __init__(self, nome: str, id: int):
         """
         Inicializa uma lista de tarefas.
 
         Args:
-            nome (str): O nome da lista (ex: 'Trabalho', 'Estudos').
-            id (int): O identificador numérico único da lista.
+            nome (str): O nome da lista.
+            id (int): O ID da lista.
         """
+
         if not nome:
             raise ValueError("O nome da lista não pode ser vazio.")
         self.id = id
@@ -103,10 +105,12 @@ class ListaDeTarefas:
 
     def __repr__(self) -> str:
         """Retorna uma representação legível da lista de tarefas."""
+
         return f"Lista(ID: {self.id}, Nome: '{self.nome}')"
 
     def to_dict(self) -> Dict[str, Any]:
         """Converte o objeto ListaDeTarefas para um dicionário para serialização."""
+
         return {
             "id": self.id,
             "nome": self.nome
@@ -115,6 +119,7 @@ class ListaDeTarefas:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ListaDeTarefas':
         """Cria um objeto ListaDeTarefas a partir de um dicionário."""
+
         return cls(
             id=data["id"],
             nome=data["nome"]

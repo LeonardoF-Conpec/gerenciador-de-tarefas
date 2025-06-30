@@ -8,14 +8,10 @@ import persistence
 
 
 class TaskManager:
-    """
-    Gerencia toda a lógica de negócios para listas e tarefas.
-    """
+    """Gerencia toda a lógica de negócios para listas e tarefas."""
 
     def __init__(self):
-        """
-        Inicializa o gerenciador, carregando os dados existentes do arquivo.
-        """
+        """Inicializa o gerenciador, carregando os dados existentes do arquivo."""
 
         # Carrega as listas e tarefas usando o módulo de persistência
         self._listas, self._tarefas = persistence.carregar_dados()
@@ -77,9 +73,7 @@ class TaskManager:
         return nova_lista
 
     def editar_lista(self, lista_id: int, novo_nome: str) -> Optional[ListaDeTarefas]:
-        """
-        Edita o nome de uma lista existente, prevenindo nomes duplicados.
-        """
+        """Edita o nome de uma lista existente, prevenindo nomes duplicados."""
 
         # Validação para nome duplicado (ignorando a própria lista que está sendo editada)
         if any(l.nome.lower() == novo_nome.lower() for l in self._listas if l.id != lista_id):
@@ -98,6 +92,7 @@ class TaskManager:
     def remover_lista(self, lista_id: int) -> bool:
         """
         Remove uma lista e todas as tarefas associadas a ela.
+
         Não permite remover a última lista existente.
         """
 
@@ -115,8 +110,6 @@ class TaskManager:
         self._salvar_tudo()
         return True
 
-    # --- Métodos de Gerenciamento de Tarefas ---
-
     def get_todas_tarefas(self) -> List[Tarefa]:
         """Retorna uma cópia de todas as tarefas."""
 
@@ -125,6 +118,7 @@ class TaskManager:
     def buscar_tarefas_por_termo(self, termo: str) -> List[Tarefa]:
         """
         Busca tarefas que contenham o termo no título, notas ou tags.
+
         A busca não diferencia maiúsculas de minúsculas.
         """
 
@@ -158,9 +152,7 @@ class TaskManager:
         return None
 
     def adicionar_tarefa(self, dados_tarefa: Dict[str, Any]) -> Tarefa:
-        """
-        Adiciona uma nova tarefa à uma lista específica.
-        """
+        """Adiciona uma nova tarefa à uma lista específica."""
 
         novo_id = self._gerar_proximo_id_tarefa()
         nova_tarefa = Tarefa(
@@ -178,15 +170,15 @@ class TaskManager:
         return nova_tarefa
 
     def editar_tarefa(self, tarefa_id: int, novos_dados: Dict[str, Any]) -> Optional[Tarefa]:
-        """
-        Edita os atributos de uma tarefa existente.
-        """
+        """Edita os atributos de uma tarefa existente."""
 
         tarefa = self.buscar_tarefa_por_id(tarefa_id)
         if not tarefa:
             return None
 
         for chave, valor in novos_dados.items():
+            # Esse hasattr verifica se um objeto, no caso aqui a tarefa a ser editada, possui um determinado atributo (titulo, data, prioridade, etc.).
+            # Se tiver, o setattr atribui a aquele atributo o novo valor que foi passado.
             if hasattr(tarefa, chave):
                 setattr(tarefa, chave, valor)
 
@@ -205,9 +197,7 @@ class TaskManager:
         return True
 
     def concluir_tarefa(self, tarefa_id: int) -> Optional[Tarefa]:
-        """
-        Marca uma tarefa como concluída. Se for recorrente, cria a próxima ocorrência.
-        """
+        """Marca uma tarefa como concluída. Se for recorrente, cria a próxima ocorrência."""
 
         tarefa_original = self.buscar_tarefa_por_id(tarefa_id)
         if not tarefa_original:
@@ -227,7 +217,7 @@ class TaskManager:
             elif tarefa_original.repeticao == "semanal":
                 nova_tarefa.data_termino += timedelta(weeks=1)
             elif tarefa_original.repeticao == "mensal":
-                # Adiciona um mês (aproximação simples, pode ser refinada)
+                # Adiciona um mês (aproximação simples)
                 nova_data = tarefa_original.data_termino
                 nova_tarefa.data_termino = nova_data.replace(month=nova_data.month + 1)
             elif tarefa_original.repeticao == "anual":
