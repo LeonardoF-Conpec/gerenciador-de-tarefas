@@ -19,7 +19,7 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
     tarefas (List[Tarefa]): A lista contendo todos os objetos Tarefa.
     """
 
-    print("Salvando dados...") # Feedback
+    print("\nSalvando dados...") # Feedback
     try:
         # Cria um dicionário principal para armazenar ambas as listas de objetos
         dados_para_salvar = {
@@ -35,10 +35,10 @@ def salvar_dados(listas: List[ListaDeTarefas], tarefas: List[Tarefa]) -> None:
             json.dump(dados_para_salvar, f, indent=4, ensure_ascii=False)
         print("Dados salvos com sucesso!")
 
-    except IOError as e:
-        print(f"Erro ao salvar o arquivo: {e}")
-    except Exception as e:
-        print(f"Ocorreu um erro inesperado ao salvar os dados: {e}")
+    except IOError as error:
+        print(f"Erro ao salvar o arquivo: {error}")
+    except Exception as error:
+        print(f"Ocorreu um erro inesperado ao salvar os dados: {error}")
 
 
 def carregar_dados() -> Tuple[List[ListaDeTarefas], List[Tarefa]]:

@@ -23,6 +23,31 @@
             ],
             "notas": "",
             "repeticao": "semanal"
+        },
+        {
+            "id": 2,
+            "titulo": "Terminar o projeto 3 de MC102",
+            "lista_id": 1,
+            "concluida": false,
+            "data_termino": "2025-07-04",
+            "prioridade": "alta",
+            "tags": [
+                "universidade",
+                "projeto"
+            ],
+            "notas": "Focar na UI/UX",
+            "repeticao": "nunca"
+        },
+        {
+            "id": 3,
+            "titulo": "Teste do Leo",
+            "lista_id": 1,
+            "concluida": false,
+            "data_termino": null,
+            "prioridade": "nenhuma",
+            "tags": [],
+            "notas": "",
+            "repeticao": "nunca"
         }
     ]
 }

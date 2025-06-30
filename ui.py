@@ -70,7 +70,7 @@ def obter_dados_nova_tarefa(gerenciador: TaskManager) -> Optional[Dict[str, Any]
         print(f"  ID: {lista.id} - {lista.nome}")
 
     try:
-        lista_id = int(input("Digite o ID da lista para a nova tarefa: "))
+        lista_id = int(input("\nDigite o ID da lista para a nova tarefa: "))
         if not gerenciador.buscar_lista_por_id(lista_id):
             print("Erro: ID de lista inválido.")
             return None
