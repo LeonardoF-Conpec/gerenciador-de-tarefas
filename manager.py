@@ -1,8 +1,6 @@
 import copy
 from datetime import timedelta
 from typing import List, Optional, Dict, Any
-
-# Importa os módulos e classes necessários
 from models import Tarefa, ListaDeTarefas
 import persistence
 

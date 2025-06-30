@@ -1,7 +1,6 @@
 import os
 from datetime import date
 from typing import List, Dict, Any, Optional
-
 from manager import TaskManager
 from models import Tarefa
 
