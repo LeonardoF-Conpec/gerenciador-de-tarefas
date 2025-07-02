@@ -111,7 +111,7 @@ Este módulo é responsável por toda a **interação com o usuário**. Ele sepa
 #### Bibliotecas e Importações Utilizadas
 
 -   **`import os`**: Biblioteca padrão do Python para interagir com o sistema operacional. É usada na função `clear_screen()` para executar o comando `cls` (no Windows) ou `clear` (em Linux/macOS) e limpar a tela do terminal.
--   **`from datetime import date`**: Utilizado para verificar se uma tarefa está atrasada, comparando sua data de término com a data atual (`date.today()`).
+-   **`from datetime import date, datetime`**:  `date` é utilizado para verificar se uma tarefa está atrasada, comparando sua data de término com a data atual (`date.today()`). `datetime` é usado para permitir a conversão de strings de data em um formato personalizado. É usada com `datetime.strptime(data_str, '%d/%m/%Y')` para que o usuário possa digitar a data no formato `DD/MM/AAAA`.
 -   **`from typing import List, Dict, Any, Optional`**: Usado para tipar os parâmetros e os valores esperados de retorno das funções.
 -   **`from manager import TaskManager`**: Importado para fins de "Type Hinting", indicando que algumas funções recebem um objeto `TaskManager` como parâmetro.
 -   **`from models import Tarefa`**: Importado para que as funções que manipulam ou exibem tarefas (como `imprimir_tarefas`) saibam qual é a estrutura de um objeto `Tarefa`.
@@ -183,7 +183,7 @@ Listas disponíveis:
 
 Digite o ID da lista para a nova tarefa: 1
 Título da tarefa: Terminar o projeto 3 de MC102
-Data de término (AAAA-MM-DD, opcional): 2025-07-04
+Data de término (DD/MM/AAAA, opcional): 04/07/2025
 Prioridade (alta, media, baixa, opcional): alta
 Tags (separadas por vírgula, opcional): universidade, projeto
 Notas (opcional): Focar na UI/UX
@@ -248,10 +248,12 @@ O sistema exibirá a lista de tarefas, incluindo a que acabamos de adicionar.
             Todas as Tarefas
 ========================================
 
-[ ] ID: 2     | Terminar o projeto 3 de MC102    | Data: 04/07/2025           | Lista: Geral          | Prioridade: Alta     | Tags: universidade, projeto
+[ ] ID: 3    | Terminar o back-end da tela de login do projeto | Data: 30/06/2025 (Atrasada!) | Lista: Trabalho         | Prioridade: Media    | Repetição: Nunca    | 
+    Notas: Ainda falta implementar a lógica de verificar o domínio do email do usuário para ver se ele é usuário interno ou externo
+[ ] ID: 4    | Terminar o projeto 3 de MC102  | Data: 04/07/2025     | Lista: Geral            | Prioridade: Alta     | Repetição: Nunca    | Tags: universidade, projeto
     Notas: Focar na UI/UX
-[ ] ID: 1     | Estudar para a prova             | Data: 07/07/2025           | Lista: Geral          | Prioridade: Alta     | Tags: estudos, prova
-    Notas:
+[ ] ID: 1    | Estudar para a prova           | Data: 07/07/2025     | Lista: Geral            | Prioridade: Alta     | Repetição: Semanal  | Tags: estudos, prova
+[ ] ID: 2    | Levar cachorro para passear    | Data: Sem data       | Lista: Geral            | Prioridade: Baixa    | Repetição: Diaria   | Tags: cachorro, lazer
 
 Ações disponíveis:
 1. Concluir uma tarefa

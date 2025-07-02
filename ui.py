@@ -1,5 +1,5 @@
 import os
-from datetime import date
+from datetime import date, datetime
 from typing import List, Dict, Any, Optional
 from manager import TaskManager
 from models import Tarefa
@@ -54,7 +54,7 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
         nome_lista = mapa_listas.get(tarefa.lista_id, "Desconhecida")
         tags_str = f"Tags: {', '.join(tarefa.tags)}" if tarefa.tags else ""
 
-        print(f"[{status}] ID: {tarefa.id:<5} | {tarefa.titulo:<30} | Data: {data_str:<20} | Lista: {nome_lista:<15} | Prioridade: {tarefa.prioridade.capitalize():<8} | {tags_str}")
+        print(f"[{status}] ID: {tarefa.id:<4} | {tarefa.titulo:<30} | Data: {data_str:<14} | Lista: {nome_lista:<16} | Prioridade: {tarefa.prioridade.capitalize():<8} | Repetição: {tarefa.repeticao.capitalize():<8} | {tags_str}")
         if tarefa.notas:
             print(f"    Notas: {tarefa.notas}")
 
@@ -83,11 +83,11 @@ def obter_dados_nova_tarefa(gerenciador: TaskManager) -> Optional[Dict[str, Any]
         print("Erro: O título é obrigatório.")
         return None
 
-    data_str = input("Data de término (AAAA-MM-DD, opcional): ")
+    data_str = input("Data de término (DD/MM/AAAA, opcional): ")
     data_termino = None
     if data_str:
         try:
-            data_termino = date.fromisoformat(data_str)
+            data_termino = datetime.strptime(data_str, '%d/%m/%Y').date()
         except ValueError:
             print("Formato de data inválido. A tarefa será criada sem data.")
 
@@ -128,11 +128,11 @@ def obter_dados_edicao_tarefa(tarefa: Tarefa, gerenciador: TaskManager) -> Dict[
         novos_dados["notas"] = novas_notas
 
     # Editar Data de Término
-    data_atual_str = tarefa.data_termino.isoformat() if tarefa.data_termino else "Nenhuma"
-    nova_data_str = input(f"Data de término (AAAA-MM-DD, atual: {data_atual_str}): ")
+    data_atual_str = tarefa.data_termino.strftime('%d/%m/%Y') if tarefa.data_termino else "Nenhuma"
+    nova_data_str = input(f"Data de término (DD/MM/AAAA, atual: {data_atual_str}): ")
     if nova_data_str:
         try:
-            novos_dados["data_termino"] = date.fromisoformat(nova_data_str)
+            novos_dados["data_termino"] = datetime.strptime(nova_data_str, '%d/%m/%Y').date()
         except ValueError:
             print("Formato de data inválido. A data não será alterada.")
 
@@ -196,9 +196,10 @@ def menu_busca_acoes() -> str:
     """Exibe as opções de ação após uma busca e retorna a escolha."""
 
     print("Ações disponíveis para os resultados da busca:")
-    print("1. Concluir tarefa")
-    print("2. Editar tarefa")
-    print("3. Remover tarefa")
+    print("1. Concluir uma tarefa")
+    print("2. Desmarcar uma tarefa (tornar pendente)")
+    print("3. Editar uma tarefa")
+    print("4. Remover uma tarefa")
     print("4. Voltar ao menu principal")
     return input("\nEscolha uma opção: ")
 

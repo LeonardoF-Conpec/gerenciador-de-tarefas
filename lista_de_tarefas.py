@@ -486,8 +486,7 @@ def iniciar_busca(gerenciador: TaskManager):
 
     while True:
         escolha = ui.menu_busca_acoes()
-
-        if escolha == '4':
+        if escolha == '5':
             break
 
         acao_str = ""
@@ -495,39 +494,39 @@ def iniciar_busca(gerenciador: TaskManager):
         if escolha == '1':
             acao_str = "concluir"
         elif escolha == '2':
-            acao_str = "editar"
+            acao_str = "desmarcar"
         elif escolha == '3':
+            acao_str = "editar"
+        elif escolha == '4':
             acao_str = "remover"
         else:
             print("Opção inválida.")
-            continue # Volta para o início do loop de ações
+            continue
 
         tarefa_id = ui.obter_id_para_acao(acao_str)
-
         if tarefa_id:
-            # Verifica se o ID fornecido está nos resultados da busca
-            if any(t.id == tarefa_id for t in resultados):
+            tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
+            if tarefa:
                 if escolha == '1': # Concluir
-                    tarefa_concluida = gerenciador.concluir_tarefa(tarefa_id)
-                    if tarefa_concluida:
-                        print(f"Tarefa '{tarefa_concluida.titulo}' concluída!")
-                    break # Sai do loop de ações após concluir
-
-                elif escolha == '2': # Editar
-                    tarefa = gerenciador.buscar_tarefa_por_id(tarefa_id)
+                    gerenciador.concluir_tarefa(tarefa_id)
+                    print("Tarefa concluída!")
+                    break
+                elif escolha == '2': # Desmarcar
+                    gerenciador.desmarcar_tarefa(tarefa_id)
+                    print("Tarefa desmarcada!")
+                    break
+                elif escolha == '3': # Editar
                     novos_dados = ui.obter_dados_edicao_tarefa(tarefa, gerenciador)
                     if novos_dados:
                         gerenciador.editar_tarefa(tarefa_id, novos_dados)
-                        print("\nTarefa editada com sucesso!")
-                    break # Sai do loop de ações após editar
-
-                elif escolha == '3': # Remover
-                    if gerenciador.remover_tarefa(tarefa_id):
-                        print("Tarefa removida com sucesso!")
-                    break # Sai do loop de ações após remover
-
+                        print("\nTarefa editada!")
+                        break
+                elif escolha == '4': # Remover
+                    gerenciador.remover_tarefa(tarefa_id)
+                    print("Tarefa removida!")
+                    break
             else:
-                print("Erro: O ID fornecido não corresponde a uma tarefa nos resultados da busca.")
+                print("Erro: Tarefa não encontrada.")
 
 
 # Código principal que roda loop da aplicação.

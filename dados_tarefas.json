@@ -6,26 +6,26 @@
         },
         {
             "id": 2,
-            "nome": "Teste"
+            "nome": "Trabalho"
         }
     ],
     "tarefas": [
         {
             "id": 1,
-            "titulo": "Teste 2",
+            "titulo": "Estudar para a prova",
             "lista_id": 1,
             "concluida": false,
-            "data_termino": "2025-12-12",
+            "data_termino": "2025-07-07",
             "prioridade": "alta",
             "tags": [
                 "estudos",
-                "teste leo"
+                "prova"
             ],
             "notas": "",
             "repeticao": "semanal"
         },
         {
-            "id": 2,
+            "id": 4,
             "titulo": "Terminar o projeto 3 de MC102",
             "lista_id": 1,
             "concluida": false,
@@ -40,14 +40,28 @@
         },
         {
             "id": 3,
-            "titulo": "Teste do Leo",
+            "titulo": "Terminar o back-end da tela de login do projeto",
+            "lista_id": 2,
+            "concluida": false,
+            "data_termino": "2025-06-30",
+            "prioridade": "media",
+            "tags": [],
+            "notas": "Ainda falta implementar a lógica de verificar o domínio do email do usuário para ver se ele é usuário interno ou externo",
+            "repeticao": "nunca"
+        },
+        {
+            "id": 2,
+            "titulo": "Levar cachorro para passear",
             "lista_id": 1,
             "concluida": false,
             "data_termino": null,
-            "prioridade": "nenhuma",
-            "tags": [],
+            "prioridade": "baixa",
+            "tags": [
+                "cachorro",
+                "lazer"
+            ],
             "notas": "",
-            "repeticao": "nunca"
+            "repeticao": "diaria"
         }
     ]
 }
