@@ -31,9 +31,9 @@ def imprimir_tarefas(tarefas: List[Tarefa], gerenciador: TaskManager):
     """
     Imprime uma lista de tarefas de forma formatada e legível.
 
-    Args:
-        tarefas (List[Tarefa]): A lista de objetos Tarefa a serem impressos.
-        gerenciador (TaskManager): O gerenciador para buscar nomes de listas.
+    Parâmetros:
+    tarefas (List[Tarefa]): A lista de objetos Tarefa a serem impressos.
+    gerenciador (TaskManager): O gerenciador para buscar nomes de listas.
     """
 
     if not tarefas:
@@ -108,9 +108,7 @@ def obter_dados_nova_tarefa(gerenciador: TaskManager) -> Optional[Dict[str, Any]
 
 
 def obter_dados_edicao_tarefa(tarefa: Tarefa, gerenciador: TaskManager) -> Dict[str, Any]:
-    """
-    Exibe um formulário de edição para a tarefa e retorna um dicionário com os campos alterados.
-    """
+    """Exibe um formulário de edição para a tarefa e retorna um dicionário com os campos alterados."""
 
     imprimir_cabecalho(f"Editando Tarefa ID: {tarefa.id}")
     print("Deixe o campo em branco e pressione Enter para manter o valor atual.")
